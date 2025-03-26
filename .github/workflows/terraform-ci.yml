@@ -1,0 +1,111 @@
+name: 'Terraform Deployment Pipeline'
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'modules/**'
+      - 'environments/**'
+      - '.github/workflows/**'
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+jobs:
+  terraform-validate-and-plan:
+    name: 'Validate and Plan'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.7
+
+    - name: Terraform Format
+      run: |
+        echo "Formatting Terraform files..."
+        terraform fmt -recursive
+        
+        echo "Checking Terraform formatting"
+        terraform fmt -check -recursive
+
+    - name: Setup TFLint
+      uses: terraform-linters/setup-tflint@v3
+      with:
+        tflint_version: v0.47.0
+
+    - name: Run TFLint
+      run: |
+        tflint --init
+        tflint --recursive
+
+    - name: Validate and Plan Dev
+      run: |
+        # Validate all modules
+        echo "Validating modules..."
+        for dir in $(find modules -type d -not -path "*/\.*" -maxdepth 1); do
+          cd $GITHUB_WORKSPACE/$dir
+          terraform init -backend=false
+          terraform validate
+          cd $GITHUB_WORKSPACE
+        done
+        
+        # Plan Dev environment
+        echo "Planning Dev environment..."
+        cd $GITHUB_WORKSPACE/environments/dev
+        terraform init
+        # Pass SSH key directly as a Terraform variable
+        TF_VAR_ssh_public_key="${{ secrets.SSH_PUBLIC_KEY }}" terraform plan -out=tfplan
+
+
+  terraform-apply-dev:
+    name: 'Deploy to Dev'
+    needs: terraform-validate-and-plan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.7
+
+    - name: Terraform Init and Apply
+      working-directory: ./environments/dev
+      env:
+        TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+      run: |
+        terraform init
+        terraform apply -auto-approve
+
+  terraform-apply-prod:
+    name: 'Deploy to Production'
+    needs: terraform-apply-dev
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+  
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.7
+  
+    - name: Terraform Init and Apply
+      working-directory: ./environments/prod
+      env:
+        TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+      run: |
+        terraform init
+        terraform apply -auto-approve

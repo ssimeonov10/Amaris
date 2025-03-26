@@ -1,0 +1,362 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.main will be created
+  + resource "azurerm_resource_group" "main" {
+      + id       = (known after apply)
+      + location = "eastus"
+      + name     = "demo-dev-rg"
+      + tags     = (known after apply)
+    }
+
+  # module.key_vault.azurerm_key_vault.kv will be created
+  + resource "azurerm_key_vault" "kv" {
+      + access_policy                 = [
+          + {
+              + certificate_permissions = [
+                  + "Get",
+                  + "List",
+                  + "Create",
+                  + "Delete",
+                  + "Update",
+                ]
+              + key_permissions         = [
+                  + "Get",
+                  + "List",
+                  + "Create",
+                  + "Delete",
+                  + "Update",
+                ]
+              + object_id               = "534e23cf-7177-40bf-8464-3306af5d5e9a"
+              + secret_permissions      = [
+                  + "Get",
+                  + "List",
+                  + "Set",
+                  + "Delete",
+                ]
+              + tenant_id               = "74159372-39dd-411b-af49-91f160067eac"
+            },
+          + {
+              + certificate_permissions = []
+              + key_permissions         = [
+                  + "Get",
+                  + "List",
+                ]
+              + object_id               = (known after apply)
+              + secret_permissions      = [
+                  + "Get",
+                  + "List",
+                ]
+              + tenant_id               = "74159372-39dd-411b-af49-91f160067eac"
+            },
+        ]
+      + enabled_for_disk_encryption   = true
+      + id                            = (known after apply)
+      + location                      = "eastus"
+      + name                          = "demodevkv"
+      + public_network_access_enabled = true
+      + purge_protection_enabled      = false
+      + resource_group_name           = "demo-dev-rg"
+      + sku_name                      = "standard"
+      + soft_delete_retention_days    = 7
+      + tags                          = (known after apply)
+      + tenant_id                     = "74159372-39dd-411b-af49-91f160067eac"
+      + vault_uri                     = (known after apply)
+
+      + contact (known after apply)
+
+      + network_acls {
+          + bypass         = "AzureServices"
+          + default_action = "Allow"
+        }
+    }
+
+  # module.key_vault.azurerm_key_vault_secret.connection_string[0] will be created
+  + resource "azurerm_key_vault_secret" "connection_string" {
+      + content_type            = "connection-string"
+      + id                      = (known after apply)
+      + key_vault_id            = (known after apply)
+      + name                    = "ConnectionString"
+      + resource_id             = (known after apply)
+      + resource_versionless_id = (known after apply)
+      + value                   = (sensitive value)
+      + version                 = (known after apply)
+      + versionless_id          = (known after apply)
+    }
+
+  # module.key_vault.azurerm_key_vault_secret.example_secret[0] will be created
+  + resource "azurerm_key_vault_secret" "example_secret" {
+      + content_type            = "text/plain"
+      + id                      = (known after apply)
+      + key_vault_id            = (known after apply)
+      + name                    = "ExampleSecret"
+      + resource_id             = (known after apply)
+      + resource_versionless_id = (known after apply)
+      + value                   = (sensitive value)
+      + version                 = (known after apply)
+      + versionless_id          = (known after apply)
+    }
+
+  # module.key_vault.azurerm_key_vault_secret.ssh_public_key[0] will be created
+  + resource "azurerm_key_vault_secret" "ssh_public_key" {
+      + content_type            = "ssh-public-key"
+      + id                      = (known after apply)
+      + key_vault_id            = (known after apply)
+      + name                    = "SshPublicKey"
+      + resource_id             = (known after apply)
+      + resource_versionless_id = (known after apply)
+      + value                   = (sensitive value)
+      + version                 = (known after apply)
+      + versionless_id          = (known after apply)
+    }
+
+  # module.vm.azurerm_linux_virtual_machine.vm will be created
+  + resource "azurerm_linux_virtual_machine" "vm" {
+      + admin_username                                         = "azureuser"
+      + allow_extension_operations                             = true
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disable_password_authentication                        = true
+      + disk_controller_type                                   = (known after apply)
+      + extensions_time_budget                                 = "PT1H30M"
+      + id                                                     = (known after apply)
+      + location                                               = "eastus"
+      + max_bid_price                                          = -1
+      + name                                                   = "demo-dev-vm"
+      + network_interface_ids                                  = (known after apply)
+      + patch_assessment_mode                                  = "ImageDefault"
+      + patch_mode                                             = "ImageDefault"
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = true
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "demo-dev-rg"
+      + size                                                   = "Standard_B1s"
+      + tags                                                   = (known after apply)
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = false
+
+      + admin_ssh_key {
+          # At least one attribute in this block is (or was) sensitive,
+          # so its contents will not be displayed.
+        }
+
+      + boot_diagnostics {}
+
+      + identity {
+          + principal_id = (known after apply)
+          + tenant_id    = (known after apply)
+          + type         = "SystemAssigned"
+        }
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = 30
+          + name                      = (known after apply)
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + source_image_reference {
+          + offer     = "0001-com-ubuntu-server-jammy"
+          + publisher = "Canonical"
+          + sku       = "22_04-lts-gen2"
+          + version   = "latest"
+        }
+
+      + termination_notification (known after apply)
+    }
+
+  # module.vm.azurerm_network_interface.vm_nic will be created
+  + resource "azurerm_network_interface" "vm_nic" {
+      + accelerated_networking_enabled = (known after apply)
+      + applied_dns_servers            = (known after apply)
+      + dns_servers                    = (known after apply)
+      + enable_accelerated_networking  = (known after apply)
+      + enable_ip_forwarding           = (known after apply)
+      + id                             = (known after apply)
+      + internal_domain_name_suffix    = (known after apply)
+      + ip_forwarding_enabled          = (known after apply)
+      + location                       = "eastus"
+      + mac_address                    = (known after apply)
+      + name                           = "demo-dev-vm-nic"
+      + private_ip_address             = (known after apply)
+      + private_ip_addresses           = (known after apply)
+      + resource_group_name            = "demo-dev-rg"
+      + tags                           = (known after apply)
+      + virtual_machine_id             = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "internal"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = (known after apply)
+          + private_ip_address_allocation                      = "Dynamic"
+          + private_ip_address_version                         = "IPv4"
+          + public_ip_address_id                               = (known after apply)
+          + subnet_id                                          = (known after apply)
+        }
+    }
+
+  # module.vm.azurerm_public_ip.vm_pip[0] will be created
+  + resource "azurerm_public_ip" "vm_pip" {
+      + allocation_method       = "Dynamic"
+      + ddos_protection_mode    = "VirtualNetworkInherited"
+      + fqdn                    = (known after apply)
+      + id                      = (known after apply)
+      + idle_timeout_in_minutes = 4
+      + ip_address              = (known after apply)
+      + ip_version              = "IPv4"
+      + location                = "eastus"
+      + name                    = "demo-dev-vm-pip"
+      + resource_group_name     = "demo-dev-rg"
+      + sku                     = "Basic"
+      + sku_tier                = "Regional"
+      + tags                    = (known after apply)
+    }
+
+  # module.vnet.azurerm_network_security_group.nsg["app-subnet"] will be created
+  + resource "azurerm_network_security_group" "nsg" {
+      + id                  = (known after apply)
+      + location            = "eastus"
+      + name                = "app-subnet-nsg"
+      + resource_group_name = "demo-dev-rg"
+      + security_rule       = (known after apply)
+      + tags                = (known after apply)
+    }
+
+  # module.vnet.azurerm_network_security_rule.rules["app-subnet.allow-http"] will be created
+  + resource "azurerm_network_security_rule" "rules" {
+      + access                      = "Allow"
+      + destination_address_prefix  = "*"
+      + destination_port_range      = "80"
+      + direction                   = "Inbound"
+      + id                          = (known after apply)
+      + name                        = "allow-http"
+      + network_security_group_name = "app-subnet-nsg"
+      + priority                    = 100
+      + protocol                    = "Tcp"
+      + resource_group_name         = "demo-dev-rg"
+      + source_address_prefix       = "*"
+      + source_port_range           = "*"
+    }
+
+  # module.vnet.azurerm_network_security_rule.rules["app-subnet.allow-ssh"] will be created
+  + resource "azurerm_network_security_rule" "rules" {
+      + access                      = "Allow"
+      + destination_address_prefix  = "*"
+      + destination_port_range      = "22"
+      + direction                   = "Inbound"
+      + id                          = (known after apply)
+      + name                        = "allow-ssh"
+      + network_security_group_name = "app-subnet-nsg"
+      + priority                    = 110
+      + protocol                    = "Tcp"
+      + resource_group_name         = "demo-dev-rg"
+      + source_address_prefix       = "*"
+      + source_port_range           = "*"
+    }
+
+  # module.vnet.azurerm_subnet.subnet["app-subnet"] will be created
+  + resource "azurerm_subnet" "subnet" {
+      + address_prefixes                               = [
+          + "10.0.1.0/24",
+        ]
+      + default_outbound_access_enabled                = true
+      + enforce_private_link_endpoint_network_policies = (known after apply)
+      + enforce_private_link_service_network_policies  = (known after apply)
+      + id                                             = (known after apply)
+      + name                                           = "app-subnet"
+      + private_endpoint_network_policies              = (known after apply)
+      + private_endpoint_network_policies_enabled      = (known after apply)
+      + private_link_service_network_policies_enabled  = (known after apply)
+      + resource_group_name                            = "demo-dev-rg"
+      + virtual_network_name                           = "demo-dev-vnet"
+    }
+
+  # module.vnet.azurerm_subnet.subnet["bastion-subnet"] will be created
+  + resource "azurerm_subnet" "subnet" {
+      + address_prefixes                               = [
+          + "10.0.3.0/24",
+        ]
+      + default_outbound_access_enabled                = true
+      + enforce_private_link_endpoint_network_policies = (known after apply)
+      + enforce_private_link_service_network_policies  = (known after apply)
+      + id                                             = (known after apply)
+      + name                                           = "bastion-subnet"
+      + private_endpoint_network_policies              = (known after apply)
+      + private_endpoint_network_policies_enabled      = (known after apply)
+      + private_link_service_network_policies_enabled  = (known after apply)
+      + resource_group_name                            = "demo-dev-rg"
+      + virtual_network_name                           = "demo-dev-vnet"
+    }
+
+  # module.vnet.azurerm_subnet.subnet["data-subnet"] will be created
+  + resource "azurerm_subnet" "subnet" {
+      + address_prefixes                               = [
+          + "10.0.2.0/24",
+        ]
+      + default_outbound_access_enabled                = true
+      + enforce_private_link_endpoint_network_policies = (known after apply)
+      + enforce_private_link_service_network_policies  = (known after apply)
+      + id                                             = (known after apply)
+      + name                                           = "data-subnet"
+      + private_endpoint_network_policies              = (known after apply)
+      + private_endpoint_network_policies_enabled      = (known after apply)
+      + private_link_service_network_policies_enabled  = (known after apply)
+      + resource_group_name                            = "demo-dev-rg"
+      + service_endpoints                              = [
+          + "Microsoft.Storage",
+        ]
+      + virtual_network_name                           = "demo-dev-vnet"
+    }
+
+  # module.vnet.azurerm_subnet_network_security_group_association.nsg_association["app-subnet"] will be created
+  + resource "azurerm_subnet_network_security_group_association" "nsg_association" {
+      + id                        = (known after apply)
+      + network_security_group_id = (known after apply)
+      + subnet_id                 = (known after apply)
+    }
+
+  # module.vnet.azurerm_virtual_network.vnet will be created
+  + resource "azurerm_virtual_network" "vnet" {
+      + address_space       = [
+          + "10.0.0.0/16",
+        ]
+      + dns_servers         = []
+      + guid                = (known after apply)
+      + id                  = (known after apply)
+      + location            = "eastus"
+      + name                = "demo-dev-vnet"
+      + resource_group_name = "demo-dev-rg"
+      + subnet              = (known after apply)
+      + tags                = (known after apply)
+    }
+
+Plan: 16 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + key_vault_uri            = (known after apply)
+  + resource_group_name      = "demo-dev-rg"
+  + subnet_ids               = {
+      + app-subnet     = (known after apply)
+      + bastion-subnet = (known after apply)
+      + data-subnet    = (known after apply)
+    }
+  + vm_id                    = (known after apply)
+  + vm_identity_principal_id = (known after apply)
+  + vm_name                  = "demo-dev-vm"
+  + vm_private_ip            = (known after apply)
+  + vm_public_ip             = (known after apply)
+  + vnet_address_space       = [
+      + "10.0.0.0/16",
+    ]
+  + vnet_id                  = (known after apply)
+  + vnet_name                = "demo-dev-vnet"
